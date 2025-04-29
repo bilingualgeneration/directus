@@ -1,0 +1,70 @@
+services:
+  postgres:
+    image: postgres:13
+    container_name: directus_postgres2
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - directus_network
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - ../data/postgres/config:/db_config
+      - ../data/postgres/data:/var/lib/postgresql/data
+      - ../data/postgres/init:/docker-entrypoint-initb.d
+
+  directus:
+    image: directus/directus:latest
+    container_name: directus_app2
+    ports:
+      - "${DIRECTUS_PORT}:8055"
+    environment:
+      ADMIN_EMAIL: ${DIRECTUS_EMAIL}
+      ADMIN_PASSWORD: ${DIRECTUS_PASSWORD}
+      #AUTH_PROVIDERS: classLink      
+      AUTH_CLASSLINK_DRIVER: openid
+      AUTH_CLASSLINK_CLIENT_ID: ${CLASSLINK_CLIENT_ID}
+      AUTH_CLASSLINK_CLIENT_SECRET: ${CLASSLINK_CLIENT_SECRET}
+      AUTH_CLASSLINK_ISSUER_URL: https://launchpad.classlink.com/.well-known/openid-configuration
+      AUTH_CLASSLINK_ALLOW_PUBLIC_REGISTRATION: true
+      DB_DATABASE: ${POSTGRES_DB}
+      DB_HOST: d7_postgres
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_PORT: ${POSTGRES_PORT}
+      EMAIL_TRANSPORT: smtp
+      EMAIL_SENDMAIL_NEW_LINE: unix
+      EMAIL_SENDMAIL_PATH: /usr/sbin/sendmail
+      EMAIL_SMTP_HOST: smtp.gmail.com
+      EMAIL_SMTP_PORT: 465
+      EMAIL_SMTP_SECURE: true
+      EMAIL_SMTP_USER: ${SMTP_USER}
+      EMAIL_SMTP_PASSWORD: ${SMTP_PASSWORD}
+      EMAIL_FROM: ${SMTP_USER}
+      PUBLIC_URL: ${PUBLIC_URL}
+      SECRET: ${SECRET}
+      STORAGE_LOCATIONS: s3
+      STORAGE_S3_DRIVER: s3
+      STORAGE_S3_KEY: ${S3_KEY}
+      STORAGE_S3_SECRET: ${S3_SECRET}
+      STORAGE_S3_BUCKET: ${S3_BUCKET}
+      STORAGE_S3_REGION: ${S3_REGION}
+      STORAGE_S3_ENDPOINT: https://s3.amazonaws.com
+      STORAGE_DEFAULT_ADAPTER: s3
+    depends_on:
+      - postgres
+    networks:
+      - directus_network
+    volumes:
+      - ./extensions:/directus/extensions
+
+volumes:
+  postgres_data:
+
+networks:
+  directus_network:
