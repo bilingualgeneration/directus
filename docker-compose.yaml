@@ -12,10 +12,10 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
-      - ../data/postgress/data:/var/lib/postgresql/data
-      - ../data/postgres/config:/db_config
-      - ../data/postgres/data:/var/lib/postgresql/data
-      - ../data/postgres/init:/docker-entrypoint-initb.d
+      - ./data/postgress/data:/var/lib/postgresql/data
+      - ./data/postgres/config:/db_config
+      - ./data/postgres/data:/var/lib/postgresql/data
+      - ./data/postgres/init:/docker-entrypoint-initb.d
 
   directus:
     image: directus/directus:latest
