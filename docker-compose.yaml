@@ -32,6 +32,14 @@ services:
       AUTH_CLASSLINK_ISSUER_URL: https://launchpad.classlink.com/.well-known/openid-configuration
       AUTH_CLASSLINK_ALLOW_PUBLIC_REGISTRATION: true
       AUTH_CLASSLINK_SYNC_USER_INFO: true
+      AUTH_CLASSLINK_MODE: session
+      AUTH_CLASSLINK_IDENTIFIER_KEY: classLink_sourcedId
+      CORS_ENABLED: true
+      CORS_ORIGIN: http://localhost:5173
+      REFRESH_TOKEN_COOKIE_DOMAIN: localhost
+      SESSION_COOKIE_DOMAIN: localhost
+      SESSION_COOKIE_SECURE: false
+      SESSION_COOKIE_SAME_SITE: lax
       DB_CLIENT: pg
       DB_DATABASE: ${POSTGRES_DB}
       DB_HOST: postgres
