@@ -12,7 +12,7 @@ dotenv.config({ path: path.join(__dirname, '../.env') });
 const fullBackup = process.argv.includes('--full');
 
 // Validate required environment variables
-const requiredVars = ['POSTGRES_DB', 'POSTGRES_USER', 'S3_REGION', 'BACKUP_BUCKET_NAME'];
+const requiredVars = ['POSTGRES_DB', 'POSTGRES_USER', 'BACKUP_REGION', 'BACKUP_BUCKET_NAME'];
 for (const varName of requiredVars) {
     if (!process.env[varName]) {
         console.error(`Error: ${varName} environment variable is required`);
@@ -23,7 +23,7 @@ for (const varName of requiredVars) {
 const { 
     POSTGRES_DB: dbName,
     POSTGRES_USER: dbUser,
-    S3_REGION: awsRegion,
+    BACKUP_REGION: awsRegion,
     BACKUP_BUCKET_NAME: bucketName
 } = process.env;
 
