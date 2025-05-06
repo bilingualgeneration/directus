@@ -63,6 +63,7 @@ services:
       STORAGE_S3_SECRET: ${S3_SECRET}
       STORAGE_S3_BUCKET: ${S3_BUCKET}
       STORAGE_S3_REGION: ${S3_REGION}
+      STORAGE_S3_ACL: "public-read"
       STORAGE_S3_ENDPOINT: https://s3.amazonaws.com
       STORAGE_DEFAULT_ADAPTER: s3
     depends_on:
