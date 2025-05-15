@@ -25,7 +25,7 @@ services:
     environment:
       ADMIN_EMAIL: ${DIRECTUS_EMAIL}
       ADMIN_PASSWORD: ${DIRECTUS_PASSWORD}
-      AUTH_PROVIDERS: classLink
+      #AUTH_PROVIDERS: classLink
       AUTH_CLASSLINK_DRIVER: openid
       AUTH_CLASSLINK_CLIENT_ID: ${CLASSLINK_CLIENT_ID}
       AUTH_CLASSLINK_CLIENT_SECRET: ${CLASSLINK_CLIENT_SECRET}
@@ -34,12 +34,12 @@ services:
       AUTH_CLASSLINK_SYNC_USER_INFO: true
       AUTH_CLASSLINK_MODE: session
       AUTH_CLASSLINK_IDENTIFIER_KEY: classLink_sourcedId
-      CORS_ENABLED: true
-      CORS_ORIGIN: http://localhost:5173
-      REFRESH_TOKEN_COOKIE_DOMAIN: localhost
-      SESSION_COOKIE_DOMAIN: localhost
-      SESSION_COOKIE_SECURE: false
-      SESSION_COOKIE_SAME_SITE: lax
+      #CORS_ENABLED: false
+      #CORS_ORIGIN: http://localhost:5173
+      #REFRESH_TOKEN_COOKIE_DOMAIN: localhost
+      #SESSION_COOKIE_DOMAIN: localhost
+      #SESSION_COOKIE_SECURE: false
+      #SESSION_COOKIE_SAME_SITE: lax
       DB_CLIENT: pg
       DB_DATABASE: ${POSTGRES_DB}
       DB_HOST: postgres
@@ -57,15 +57,6 @@ services:
       EMAIL_FROM: ${SMTP_USER}
       PUBLIC_URL: ${PUBLIC_URL}
       SECRET: ${SECRET}
-      STORAGE_LOCATIONS: s3
-      STORAGE_S3_DRIVER: s3
-      STORAGE_S3_KEY: ${S3_KEY}
-      STORAGE_S3_SECRET: ${S3_SECRET}
-      STORAGE_S3_BUCKET: ${S3_BUCKET}
-      STORAGE_S3_REGION: ${S3_REGION}
-      STORAGE_S3_ACL: "public-read"
-      STORAGE_S3_ENDPOINT: https://s3.amazonaws.com
-      STORAGE_DEFAULT_ADAPTER: s3
     depends_on:
       - postgres
     networks:
