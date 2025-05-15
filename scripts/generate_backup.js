@@ -2,8 +2,6 @@ const { exec } = require('child_process');
 const path = require('path');
 const dotenv = require('dotenv');
 const fs = require('fs');
-const { S3Client } = require('@aws-sdk/client-s3');
-const { Upload } = require('@aws-sdk/lib-storage');
 
 // Load environment variables
 dotenv.config({ path: path.join(__dirname, '../.env') });
@@ -27,47 +25,11 @@ const {
     BACKUP_BUCKET_NAME: bucketName
 } = process.env;
 
-const dateString = new Date().toISOString().split('T')[0];
+const dateString = new Date().toISOString();
 const backupType = fullBackup ? 'full' : 'default';
-const gzFileName = `/tmp/${dateString}${fullBackup ? '-full' : ''}.sql.gz`;
+const gzFileName = `./backups/${dateString}${fullBackup ? '-full' : ''}.sql.gz`;
 
 console.log(`Starting ${backupType} backup process for database ${dbName}...`);
-
-// Initialize S3 client
-const s3Client = new S3Client({ region: awsRegion });
-
-async function uploadToS3(filePath) {
-    const fileStream = fs.createReadStream(filePath);
-    
-    try {
-        console.log(`Uploading ${filePath} to S3...`);
-        
-        const upload = new Upload({
-            client: s3Client,
-            params: {
-                Bucket: bucketName,
-                Key: path.basename(filePath),
-                Body: fileStream,
-                ContentType: 'application/gzip'
-            },
-            queueSize: 4,
-            partSize: 1024 * 1024 * 5
-        });
-
-        upload.on('httpUploadProgress', (progress) => {
-            if (progress.total) {
-                console.log(`Upload progress: ${Math.round((progress.loaded / progress.total) * 100)}%`);
-            }
-        });
-
-        await upload.done();
-        console.log(`✓ Successfully uploaded to s3://${bucketName}/${path.basename(filePath)}`);
-        return true;
-    } catch (err) {
-        console.error('S3 upload error:', err);
-        return false;
-    }
-}
 
 async function createBackup() {
     // Build pg_dump command
@@ -108,38 +70,8 @@ async function createBackup() {
 
             const fileSizeMB = (fs.statSync(gzFileName).size / 1024 / 1024).toFixed(2);
             console.log(`✓ ${backupType} backup created: ${gzFileName} (${fileSizeMB} MB)`);
-
-            try {
-                const uploadSuccess = await uploadToS3(gzFileName);
-                if (!uploadSuccess) {
-                    reject(new Error('S3 upload failed'));
-                    return;
-                }
-                resolve();
-            } catch (err) {
-                reject(err);
-            } finally {
-                // Clean up local file after upload
-                try {
-                    fs.unlinkSync(gzFileName);
-                    console.log('Cleaned up local backup file');
-                } catch (err) {
-                    console.error('Could not clean up local file:', err);
-                }
-            }
         });
     });
-}
-
-function cleanupFailedBackup() {
-    if (fs.existsSync(gzFileName)) {
-        try {
-            fs.unlinkSync(gzFileName);
-            console.log('Cleaned up failed backup file');
-        } catch (err) {
-            console.error('Could not clean up backup file:', err);
-        }
-    }
 }
 
 // Run the backup
