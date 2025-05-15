@@ -62,7 +62,10 @@ services:
     networks:
       - directus_network
     volumes:
-      - ./extensions:/directus/extensions
+      - ./app_data/extensions:/directus/extensions
+      - ./app_data/database:/directus/database
+      - ./app_data/uploads:/directus/uploads
+      - ./app_data/templates:/directus/templates
 
 networks:
   directus_network:
