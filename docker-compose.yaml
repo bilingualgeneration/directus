@@ -1,6 +1,7 @@
 services:
   postgres:
     image: postgres:13
+    restart: unless-stopped
     container_name: directus_postgres
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -19,6 +20,7 @@ services:
 
   directus:
     image: directus/directus:latest
+    restart: unless-stopped
     container_name: directus_app
     ports:
       - "${DIRECTUS_PORT}:8055"
