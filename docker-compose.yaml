@@ -36,8 +36,8 @@ services:
       AUTH_CLASSLINK_SYNC_USER_INFO: true
       AUTH_CLASSLINK_MODE: session
       AUTH_CLASSLINK_IDENTIFIER_KEY: classLink_sourcedId
-      #CORS_ENABLED: false
-      #CORS_ORIGIN: http://localhost:5173
+      CORS_ENABLED: true
+      CORS_ORIGIN: true
       #REFRESH_TOKEN_COOKIE_DOMAIN: localhost
       #SESSION_COOKIE_DOMAIN: localhost
       #SESSION_COOKIE_SECURE: false
